@@ -436,7 +436,7 @@ export default function ClientPage() {
                       {shippingCompanies?.map((company) => (
                         <option key={company.id} value={company.id}>
                           {company.name} -{" "}
-                          {company.pricePerKm.toLocaleString("vi-VN")} VND/km
+                          {company.pricePerKm.toLocaleString("vi-VN")} VND/Tấn
                         </option>
                       ))}
                     </select>

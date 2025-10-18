@@ -773,7 +773,7 @@ export default function AdminPage() {
                             {company.address}
                           </p>
                           <p className="text-sm text-blue-600 font-medium mt-1">
-                            {company.pricePerKm.toLocaleString("vi-VN")} VND/km
+                            {company.pricePerKm.toLocaleString("vi-VN")} VND/Tấn
                           </p>
                         </div>
                         <button
