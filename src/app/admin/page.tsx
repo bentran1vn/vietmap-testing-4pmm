@@ -221,7 +221,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Công suất (tấn/ngày)
+                    Công suất (Tấn/ngày)
                   </label>
                   <input
                     type="number"
@@ -238,7 +238,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Giá sấy lúa (VND)
+                    Giá sấy lúa (VND/Tấn)
                   </label>
                   <input
                     type="number"
@@ -255,7 +255,7 @@ export default function AdminPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-semibold text-slate-700 mb-2">
-                    Giá sấy và bảo quản lúa (VND)
+                    Giá sấy và bảo quản lúa (VND/Tấn)
                   </label>
                   <input
                     type="number"
@@ -312,15 +312,15 @@ export default function AdminPage() {
                       <p className="text-sm text-slate-600 mt-1">{s.address}</p>
                     </div>
                     <div className="md:col-span-4 text-sm text-slate-600">
-                      <div> Công suất: {s.limitCapacity}kg</div>
+                      <div> Công suất: {s.limitCapacity} Tấn</div>
                       <div>
                         Giá sấy: {(s.dryingPrice || 0).toLocaleString("vi-VN")}{" "}
-                        VND
+                        VND/Tấn
                       </div>
                       <div>
                         Giá sấy + bảo quản:{" "}
                         {(s.dryingAndStoragePrice || 0).toLocaleString("vi-VN")}{" "}
-                        VND
+                        VND/Tấn
                       </div>
                     </div>
                     <div className="md:col-span-2 text-right">
@@ -493,7 +493,7 @@ export default function AdminPage() {
                                 Sản lượng khách hàng
                               </p>
                               <p className="text-sm text-slate-700 font-medium">
-                                {o.clientCapacity}kg
+                                {(o.clientCapacity / 1000).toFixed(2)} Tấn
                               </p>
                             </div>
                           )}
@@ -546,6 +546,23 @@ export default function AdminPage() {
                               <p className="text-sm text-orange-600 font-medium flex items-center gap-1">
                                 <span>💰</span>{" "}
                                 {(o.servicePrice || 0).toLocaleString("vi-VN")}{" "}
+                                VND/Tấn
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Tổng giá tiền */}
+                          {o.servicePrice && o.clientCapacity && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Tổng giá tiền
+                              </p>
+                              <p className="text-sm text-red-600 font-bold flex items-center gap-1">
+                                <span>💵</span>{" "}
+                                {(
+                                  (o.servicePrice || 0) *
+                                  (o.clientCapacity || 0)
+                                ).toLocaleString("vi-VN")}{" "}
                                 VND
                               </p>
                             </div>

@@ -172,7 +172,7 @@ export default function ShopPage() {
                                 Sản lượng khách hàng
                               </p>
                               <p className="text-sm text-slate-700 font-medium">
-                                {o.clientCapacity}kg
+                                {o.clientCapacity} Tấn
                               </p>
                             </div>
                           )}
@@ -225,6 +225,23 @@ export default function ShopPage() {
                               <p className="text-sm text-orange-600 font-medium flex items-center gap-1">
                                 <span>💰</span>{" "}
                                 {(o.servicePrice || 0).toLocaleString("vi-VN")}{" "}
+                                VND/Tấn
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Tổng giá tiền */}
+                          {o.servicePrice && o.clientCapacity && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Tổng giá tiền
+                              </p>
+                              <p className="text-sm text-red-600 font-bold flex items-center gap-1">
+                                <span>💵</span>{" "}
+                                {(
+                                  (o.servicePrice || 0) *
+                                  (o.clientCapacity || 0)
+                                ).toLocaleString("vi-VN")}{" "}
                                 VND
                               </p>
                             </div>

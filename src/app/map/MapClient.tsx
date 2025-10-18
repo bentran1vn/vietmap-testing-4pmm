@@ -488,9 +488,10 @@ export default function MapClient(props: BookingProps = {}) {
               <input
                 type="number"
                 min={0}
+                step="0.01"
                 value={customerCapacity}
                 onChange={(e) => setCustomerCapacity(e.target.value)}
-                placeholder="Công suất (tấn/ngày)"
+                placeholder="Công suất (Tấn/ngày)"
                 className="text-black px-3 py-1.5 border rounded text-sm w-[180px]"
               />
               <button
@@ -498,7 +499,7 @@ export default function MapClient(props: BookingProps = {}) {
                 disabled={isRoutingAll}
                 className="px-3 py-1.5 rounded bg-emerald-600 text-white text-sm disabled:opacity-60"
               >
-                {isRoutingAll ? "Finding routes..." : "Find shops"}
+                {isRoutingAll ? "Đang tìm lò sấy..." : "Tìm lò sấy"}
               </button>
             </form>
           </div>
@@ -512,10 +513,10 @@ export default function MapClient(props: BookingProps = {}) {
       <div className="h-[100vh] relative">
         <div ref={mapContainerRef} id="map" className="w-full h-full" />
         <div className="absolute top-26 right-4 w-80 max-h-[80vh] overflow-auto bg-white/95 backdrop-blur-sm border rounded shadow text-sm">
-          <div className="px-3 py-2 border-b font-semibold">Eligible shops</div>
+          <div className="px-3 py-2 border-b font-semibold">Lò sấy phù hợp</div>
           {eligibleList.length === 0 ? (
             <div className="px-3 py-2 text-gray-600">
-              Enter address and capacity, then click Find shops.
+              Nhập địa chỉ và sản lượng, sau đó nhấn Tìm lò sấy.
             </div>
           ) : (
             <ul className="divide-y">
@@ -548,13 +549,13 @@ export default function MapClient(props: BookingProps = {}) {
                   </div>
                   <div className="mt-1 text-xs text-gray-600">
                     <div>
-                      Công suất: {s.capacity}kg · Giá sấy:{" "}
-                      {(s.dryingPrice || 0).toLocaleString("vi-VN")} VND
+                      Công suất: {s.capacity} Tấn · Giá sấy:{" "}
+                      {(s.dryingPrice || 0).toLocaleString("vi-VN")} VND/Tấn
                     </div>
                     <div>
                       Giá Sấy + Bảo Quản:{" "}
                       {(s.dryingAndStoragePrice || 0).toLocaleString("vi-VN")}{" "}
-                      VND
+                      VND/Tấn
                     </div>
                   </div>
                 </li>
