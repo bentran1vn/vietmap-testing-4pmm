@@ -26,6 +26,8 @@ type Order = {
   clientCapacity?: number;
   shopName?: string;
   shippingCompany?: string;
+  serviceType?: "drying" | "dryingAndStorage"; // Loại dịch vụ
+  servicePrice?: number; // Giá dịch vụ
 };
 
 const STORAGE_KEY = "orders";
@@ -91,6 +93,9 @@ export default function ClientPage() {
   const [shippingCompanies, setShippingCompanies] = useState<ShippingCompany[]>(
     []
   );
+  const [serviceType, setServiceType] = useState<"drying" | "dryingAndStorage">(
+    "drying"
+  );
 
   useEffect(() => {
     // Only run on client side to avoid hydration mismatch
@@ -139,7 +144,7 @@ export default function ClientPage() {
   }
 
   return (
-    <AdminLayout title="Quản lý khách hàng">
+    <AdminLayout title="RiceLink">
       <div className="bg-white px-6 py-4 border-b border-slate-200">
         <div className="flex gap-2">
           <button
@@ -261,6 +266,37 @@ export default function ClientPage() {
                                 </p>
                               </div>
                             )}
+
+                            {/* Loại dịch vụ */}
+                            {o.serviceType && (
+                              <div>
+                                <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                  Loại dịch vụ
+                                </p>
+                                <p className="text-sm text-purple-600 font-medium flex items-center gap-1">
+                                  <span>⚙️</span>{" "}
+                                  {o.serviceType === "drying"
+                                    ? "Sấy lúa"
+                                    : "Sấy và bảo quản lúa"}
+                                </p>
+                              </div>
+                            )}
+
+                            {/* Giá dịch vụ */}
+                            {o.servicePrice && (
+                              <div>
+                                <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                  Giá dịch vụ
+                                </p>
+                                <p className="text-sm text-orange-600 font-medium flex items-center gap-1">
+                                  <span>💰</span>{" "}
+                                  {(o.servicePrice || 0).toLocaleString(
+                                    "vi-VN"
+                                  )}{" "}
+                                  VND
+                                </p>
+                              </div>
+                            )}
                           </div>
                         </div>
 
@@ -333,6 +369,25 @@ export default function ClientPage() {
                   />
                 </div>
                 <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Loại dịch vụ
+                  </label>
+                  <select
+                    value={serviceType}
+                    onChange={(e) =>
+                      setServiceType(
+                        e.target.value as "drying" | "dryingAndStorage"
+                      )
+                    }
+                    className="text-black w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm"
+                  >
+                    <option value="drying">Sấy lúa</option>
+                    <option value="dryingAndStorage">
+                      Sấy và bảo quản lúa
+                    </option>
+                  </select>
+                </div>
+                <div>
                   <label className="flex items-center gap-2 text-sm font-semibold text-slate-700 mb-2">
                     <input
                       type="checkbox"
@@ -378,7 +433,7 @@ export default function ClientPage() {
 
             <div className="lg:col-span-2">
               <MapClient
-                onSelectShop={(shopName, address, capacity) => {
+                onSelectShop={(shopName, address, capacity, shopData) => {
                   if (!clientName.trim()) {
                     alert("Vui lòng nhập tên khách hàng trước.");
                     return;
@@ -395,10 +450,19 @@ export default function ClientPage() {
                         (s) => s.id === selectedShippingCompany
                       )?.name || "N/A";
 
+                  const serviceTypeText =
+                    serviceType === "drying"
+                      ? "Sấy lúa"
+                      : "Sấy và bảo quản lúa";
+                  const servicePrice =
+                    serviceType === "drying"
+                      ? shopData?.dryingPrice || 0
+                      : shopData?.dryingAndStoragePrice || 0;
+
                   const newOrder: Order = {
                     id: crypto.randomUUID(),
                     clientName: clientName.trim(),
-                    item: `Sấy ${capacity}kg · ${shopName}`,
+                    item: `${serviceTypeText} ${capacity}kg · ${shopName}`,
                     quantity: 1,
                     status: "pending",
                     createdAt: Date.now(),
@@ -406,11 +470,14 @@ export default function ClientPage() {
                     clientCapacity: capacity,
                     shopName: shopName,
                     shippingCompany: shippingCompanyName,
+                    serviceType: serviceType,
+                    servicePrice: servicePrice,
                   };
                   setOrders((prev) => [newOrder, ...prev]);
                   setClientName("");
                   setHasShippingCompany(false);
                   setSelectedShippingCompany("");
+                  setServiceType("drying");
                   setTab("orders");
                 }}
               />

@@ -26,6 +26,8 @@ type Order = {
   clientCapacity?: number;
   shopName?: string;
   shippingCompany?: string;
+  serviceType?: "drying" | "dryingAndStorage"; // Loại dịch vụ
+  servicePrice?: number; // Giá dịch vụ
 };
 
 const ORDERS_KEY = "orders";
@@ -57,6 +59,8 @@ export default function AdminPage() {
     address: "",
     district: "",
     capacity: 0,
+    dryingPrice: 0,
+    dryingAndStoragePrice: 0,
   });
 
   // Shipping Companies
@@ -109,11 +113,11 @@ export default function AdminPage() {
         <div className="flex gap-2">
           {(
             [
-              { k: "orders", label: "Quản lý Đơn hàng" },
-              { k: "shops", label: "Quản lý Lò sấy" },
+              { k: "orders", label: "Quản lý đơn hàng" },
+              { k: "shops", label: "Quản lý lò sấy" },
               { k: "map", label: "Bản đồ lò sấy" },
-              { k: "farmers", label: "Quản lý Khách Hàng" },
-              { k: "shipping", label: "Quản lý Vận chuyển" },
+              { k: "farmers", label: "Quản lý khách hàng" },
+              { k: "shipping", label: "Quản lý vận chuyển" },
             ] as const
           ).map((t) => (
             <button
@@ -159,6 +163,9 @@ export default function AdminPage() {
                   coordinates: [lat, lon],
                   rating: 0,
                   limitCapacity: cap > 0 ? cap : 0,
+                  dryingPrice: Number(newShop.dryingPrice) || 0,
+                  dryingAndStoragePrice:
+                    Number(newShop.dryingAndStoragePrice) || 0,
                 });
                 setShops([created, ...shops]);
                 setNewShop({
@@ -166,6 +173,8 @@ export default function AdminPage() {
                   address: "",
                   district: "",
                   capacity: 0,
+                  dryingPrice: 0,
+                  dryingAndStoragePrice: 0,
                 });
               }}
               className="bg-white rounded-xl p-6 shadow-sm border border-slate-200 h-fit"
@@ -227,6 +236,40 @@ export default function AdminPage() {
                     className="text-black w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Giá sấy lúa (VND)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={newShop.dryingPrice}
+                    onChange={(e) =>
+                      setNewShop({
+                        ...newShop,
+                        dryingPrice: Number(e.target.value || 0),
+                      })
+                    }
+                    className="text-black w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-semibold text-slate-700 mb-2">
+                    Giá sấy và bảo quản lúa (VND)
+                  </label>
+                  <input
+                    type="number"
+                    min={0}
+                    value={newShop.dryingAndStoragePrice}
+                    onChange={(e) =>
+                      setNewShop({
+                        ...newShop,
+                        dryingAndStoragePrice: Number(e.target.value || 0),
+                      })
+                    }
+                    className="text-black w-full px-4 py-2.5 border border-slate-300 rounded-lg text-sm"
+                  />
+                </div>
                 <button
                   type="submit"
                   className="w-full px-4 py-3 rounded-lg bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 mt-2"
@@ -238,10 +281,25 @@ export default function AdminPage() {
 
             <div className="lg:col-span-2 bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
               <div className="px-6 py-5 border-b border-slate-200 bg-gradient-to-r from-blue-50 to-slate-50">
-                <h2 className="text-xl font-bold text-slate-900">
-                  Danh sách lò sấy
-                </h2>
-                <p className="text-sm text-slate-600 mt-1">{shops.length} lò</p>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-xl font-bold text-slate-900">
+                      Danh sách lò sấy
+                    </h2>
+                    <p className="text-sm text-slate-600 mt-1">
+                      {shops.length} lò
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      db.updateShopsWithPricing();
+                      setShops(db.listShops());
+                    }}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg text-sm hover:bg-green-700 transition-colors"
+                  >
+                    Cập nhật giá
+                  </button>
+                </div>
               </div>
               <div className="divide-y divide-slate-200">
                 {shops.map((s) => (
@@ -249,12 +307,21 @@ export default function AdminPage() {
                     key={s.id}
                     className="p-5 grid grid-cols-1 md:grid-cols-12 gap-4 items-center"
                   >
-                    <div className="md:col-span-7">
+                    <div className="md:col-span-6">
                       <p className="font-semibold text-slate-900">{s.name}</p>
                       <p className="text-sm text-slate-600 mt-1">{s.address}</p>
                     </div>
-                    <div className="md:col-span-3 text-sm text-slate-600">
-                      Công suất: {s.limitCapacity}
+                    <div className="md:col-span-4 text-sm text-slate-600">
+                      <div> Công suất: {s.limitCapacity}kg</div>
+                      <div>
+                        Giá sấy: {(s.dryingPrice || 0).toLocaleString("vi-VN")}{" "}
+                        VND
+                      </div>
+                      <div>
+                        Giá sấy + bảo quản:{" "}
+                        {(s.dryingAndStoragePrice || 0).toLocaleString("vi-VN")}{" "}
+                        VND
+                      </div>
                     </div>
                     <div className="md:col-span-2 text-right">
                       <button
@@ -451,6 +518,35 @@ export default function AdminPage() {
                               </p>
                               <p className="text-sm text-green-600 font-medium flex items-center gap-1">
                                 <span>🚚</span> {o.shippingCompany}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Loại dịch vụ */}
+                          {o.serviceType && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Loại dịch vụ
+                              </p>
+                              <p className="text-sm text-purple-600 font-medium flex items-center gap-1">
+                                <span>⚙️</span>{" "}
+                                {o.serviceType === "drying"
+                                  ? "Sấy lúa"
+                                  : "Sấy và bảo quản lúa"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Giá dịch vụ */}
+                          {o.servicePrice && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Giá dịch vụ
+                              </p>
+                              <p className="text-sm text-orange-600 font-medium flex items-center gap-1">
+                                <span>💰</span>{" "}
+                                {(o.servicePrice || 0).toLocaleString("vi-VN")}{" "}
+                                VND
                               </p>
                             </div>
                           )}

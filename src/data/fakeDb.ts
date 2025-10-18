@@ -20,6 +20,8 @@ export interface ShopRecord {
   coordinates: [number, number]; // [lat, lng]
   rating: number;
   limitCapacity: number;
+  dryingPrice: number; // Giá sấy lúa (VND)
+  dryingAndStoragePrice: number; // Giá sấy và bảo quản lúa (VND)
   createdAt: number;
 }
 
@@ -76,6 +78,8 @@ function ensureSeeded() {
       coordinates: [s["Tọa độ"][0], s["Tọa độ"][1]],
       rating: s.Rating,
       limitCapacity: s.LimitCapacity,
+      dryingPrice: s["Giá sấy lúa"],
+      dryingAndStoragePrice: s["Giá sấy và bảo quản lúa"],
       createdAt: Date.now(),
     }));
     const accounts: Account[] = [
@@ -107,6 +111,31 @@ function ensureSeeded() {
     db.accounts = accounts;
     db.shops = shops;
     needsUpdate = true;
+  } else {
+    // Update existing shops with pricing data if missing
+    const updatedShops = db.shops.map((shop) => {
+      if (
+        shop.dryingPrice === undefined ||
+        shop.dryingAndStoragePrice === undefined
+      ) {
+        // Find matching shop in seed data
+        const seedShop = seedShops.find((s) => s["Tên lò sấy"] === shop.name);
+        if (seedShop) {
+          return {
+            ...shop,
+            dryingPrice: seedShop["Giá sấy lúa"],
+            dryingAndStoragePrice: seedShop["Giá sấy và bảo quản lúa"],
+          };
+        }
+      }
+      return shop;
+    });
+
+    // Check if any shops were updated
+    if (JSON.stringify(updatedShops) !== JSON.stringify(db.shops)) {
+      db.shops = updatedShops;
+      needsUpdate = true;
+    }
   }
 
   // Always ensure shipping companies exist
@@ -117,7 +146,7 @@ function ensureSeeded() {
         name: "Công Ty Cổ Phần Vận Tải BMC Đồng Tháp",
         address: "Số 145, Trương Hán Siêu, Phường Mỹ Trà, Đồng Tháp.",
         imageUrl: "/dongthap.png",
-        pricePerKm: 5000,
+        pricePerKm: 120000,
         createdAt: Date.now(),
       },
       {
@@ -125,7 +154,7 @@ function ensureSeeded() {
         name: "Hợp Tác Xã Vận Tải Thủy Bộ Thành Phố Cao Lãnh",
         address: "03 Điện Biên Phủ, Mỹ Trà, Cao Lãnh, Đồng Tháp",
         imageUrl: "/hoptacxa.png",
-        pricePerKm: 4500,
+        pricePerKm: 150000,
         createdAt: Date.now(),
       },
       {
@@ -133,7 +162,7 @@ function ensureSeeded() {
         name: "Vận tải Hoàng Minh",
         address: "Khu 1, Xã Tân Phước 1, Tỉnh Đồng Tháp",
         imageUrl: "/hoangminh.png",
-        pricePerKm: 4800,
+        pricePerKm: 180000,
         createdAt: Date.now(),
       },
     ];
@@ -317,7 +346,7 @@ export const db = {
         name: "Công Ty Cổ Phần Vận Tải BMC Đồng Tháp",
         address: "Số 145, Trương Hán Siêu, Phường Mỹ Trà, Đồng Tháp.",
         imageUrl: "/dongthap.png",
-        pricePerKm: 5000,
+        pricePerKm: 120000,
         createdAt: Date.now(),
       },
       {
@@ -325,7 +354,7 @@ export const db = {
         name: "Hợp Tác Xã Vận Tải Thủy Bộ Thành Phố Cao Lãnh",
         address: "03 Điện Biên Phủ, Mỹ Trà, Cao Lãnh, Đồng Tháp",
         imageUrl: "/hoptacxa.png",
-        pricePerKm: 4500,
+        pricePerKm: 150000,
         createdAt: Date.now(),
       },
       {
@@ -333,11 +362,32 @@ export const db = {
         name: "Vận tải Hoàng Minh",
         address: "Khu 1, Xã Tân Phước 1, Tỉnh Đồng Tháp",
         imageUrl: "/hoangminh.png",
-        pricePerKm: 4800,
+        pricePerKm: 180000,
         createdAt: Date.now(),
       },
     ];
     dbState.shippingCompanies = shippingCompanies;
     writeDb(dbState);
+  },
+
+  // Force update all shops with pricing data
+  updateShopsWithPricing(): void {
+    const dbState = readDb();
+    const updatedShops = dbState.shops.map((shop) => {
+      // Find matching shop in seed data
+      const seedShop = seedShops.find((s) => s["Tên lò sấy"] === shop.name);
+      if (seedShop) {
+        return {
+          ...shop,
+          dryingPrice: seedShop["Giá sấy lúa"],
+          dryingAndStoragePrice: seedShop["Giá sấy và bảo quản lúa"],
+        };
+      }
+      return shop;
+    });
+
+    dbState.shops = updatedShops;
+    writeDb(dbState);
+    emitShopsUpdated();
   },
 };

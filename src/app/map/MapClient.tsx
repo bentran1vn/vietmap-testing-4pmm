@@ -45,7 +45,12 @@ function decodePolyline5(encoded: string): [number, number][] {
 type BookingProps = {
   initialAddressText?: string;
   initialCapacity?: number;
-  onSelectShop?: (shopName: string, address: string, capacity: number) => void;
+  onSelectShop?: (
+    shopName: string,
+    address: string,
+    capacity: number,
+    shopData?: { dryingPrice: number; dryingAndStoragePrice: number }
+  ) => void;
 };
 
 export default function MapClient(props: BookingProps = {}) {
@@ -62,7 +67,14 @@ export default function MapClient(props: BookingProps = {}) {
     props.initialCapacity != null ? String(props.initialCapacity) : ""
   );
   const [eligibleList, setEligibleList] = useState<
-    { name: string; distance: number; rating: number; capacity: number }[]
+    {
+      name: string;
+      distance: number;
+      rating: number;
+      capacity: number;
+      dryingPrice: number;
+      dryingAndStoragePrice: number;
+    }[]
   >([]);
 
   const ROUTES_SOURCE_ID = "routes-source";
@@ -80,6 +92,8 @@ export default function MapClient(props: BookingProps = {}) {
       "Tọa độ": number[];
       Rating: number;
       LimitCapacity: number;
+      "Giá sấy lúa": number;
+      "Giá sấy và bảo quản lúa": number;
     }[]
   >([]);
 
@@ -96,6 +110,8 @@ export default function MapClient(props: BookingProps = {}) {
           shop.rating || parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // 3.5–5.0
         LimitCapacity:
           shop.limitCapacity || Math.floor(Math.random() * 1500) + 500, // 500–2000
+        "Giá sấy lúa": shop.dryingPrice || 0,
+        "Giá sấy và bảo quản lúa": shop.dryingAndStoragePrice || 0,
       }));
       setShops(result);
     }
@@ -116,6 +132,8 @@ export default function MapClient(props: BookingProps = {}) {
             shop.rating || parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)),
           LimitCapacity:
             shop.limitCapacity || Math.floor(Math.random() * 1500) + 500,
+          "Giá sấy lúa": shop.dryingPrice || 0,
+          "Giá sấy và bảo quản lúa": shop.dryingAndStoragePrice || 0,
         }));
         setShops(result);
       }
@@ -316,7 +334,11 @@ export default function MapClient(props: BookingProps = {}) {
         const cap = Number(customerCapacity);
         type ShopLike = Pick<
           (typeof shops)[number],
-          "Rating" | "LimitCapacity" | "Tên lò sấy"
+          | "Rating"
+          | "LimitCapacity"
+          | "Tên lò sấy"
+          | "Giá sấy lúa"
+          | "Giá sấy và bảo quản lúa"
         >;
         const filteredSorted = valid
           .filter((r) =>
@@ -335,6 +357,9 @@ export default function MapClient(props: BookingProps = {}) {
             distance: r.distance,
             rating: (r.shop as ShopLike).Rating ?? 0,
             capacity: (r.shop as ShopLike).LimitCapacity ?? 0,
+            dryingPrice: (r.shop as ShopLike)["Giá sấy lúa"] ?? 0,
+            dryingAndStoragePrice:
+              (r.shop as ShopLike)["Giá sấy và bảo quản lúa"] ?? 0,
           }));
         setEligibleList(filteredSorted);
 
@@ -497,22 +522,41 @@ export default function MapClient(props: BookingProps = {}) {
               {eligibleList.map((s, idx) => (
                 <li
                   key={idx}
-                  className="px-3 py-2 flex items-center justify-between gap-2 hover:bg-gray-50 cursor-pointer"
+                  className="px-3 py-2 hover:bg-gray-50 cursor-pointer"
                   onClick={() =>
                     props.onSelectShop?.(
                       s.name,
                       addressText,
-                      Number(customerCapacity)
+                      Number(customerCapacity),
+                      {
+                        dryingPrice: s.dryingPrice,
+                        dryingAndStoragePrice: s.dryingAndStoragePrice,
+                      }
                     )
                   }
                 >
-                  <span className="truncate text-black" title={s.name}>
-                    {s.name}
-                  </span>
-                  <span className="shrink-0 text-gray-700">
-                    {(s.distance / 1000).toFixed(1)} km · {s.rating}★ ·{" "}
-                    {s.capacity}
-                  </span>
+                  <div className="flex items-center justify-between gap-2">
+                    <span
+                      className="truncate text-black font-medium"
+                      title={s.name}
+                    >
+                      {s.name}
+                    </span>
+                    <span className="shrink-0 text-gray-700 text-xs">
+                      {(s.distance / 1000).toFixed(1)} km · {s.rating}★
+                    </span>
+                  </div>
+                  <div className="mt-1 text-xs text-gray-600">
+                    <div>
+                      Công suất: {s.capacity}kg · Giá sấy:{" "}
+                      {(s.dryingPrice || 0).toLocaleString("vi-VN")} VND
+                    </div>
+                    <div>
+                      Giá Sấy + Bảo Quản:{" "}
+                      {(s.dryingAndStoragePrice || 0).toLocaleString("vi-VN")}{" "}
+                      VND
+                    </div>
+                  </div>
                 </li>
               ))}
             </ul>

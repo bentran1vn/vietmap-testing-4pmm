@@ -16,6 +16,8 @@ type Order = {
   clientCapacity?: number;
   shopName?: string;
   shippingCompany?: string;
+  serviceType?: "drying" | "dryingAndStorage"; // Loại dịch vụ
+  servicePrice?: number; // Giá dịch vụ
 };
 
 const STORAGE_KEY = "orders";
@@ -195,6 +197,35 @@ export default function ShopPage() {
                               </p>
                               <p className="text-sm text-green-600 font-medium flex items-center gap-1">
                                 <span>🚚</span> {o.shippingCompany}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Loại dịch vụ */}
+                          {o.serviceType && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Loại dịch vụ
+                              </p>
+                              <p className="text-sm text-purple-600 font-medium flex items-center gap-1">
+                                <span>⚙️</span>{" "}
+                                {o.serviceType === "drying"
+                                  ? "Sấy lúa"
+                                  : "Sấy và bảo quản lúa"}
+                              </p>
+                            </div>
+                          )}
+
+                          {/* Giá dịch vụ */}
+                          {o.servicePrice && (
+                            <div>
+                              <p className="text-xs text-slate-500 uppercase tracking-wide">
+                                Giá dịch vụ
+                              </p>
+                              <p className="text-sm text-orange-600 font-medium flex items-center gap-1">
+                                <span>💰</span>{" "}
+                                {(o.servicePrice || 0).toLocaleString("vi-VN")}{" "}
+                                VND
                               </p>
                             </div>
                           )}

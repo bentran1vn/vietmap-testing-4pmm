@@ -7,6 +7,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.556674636154582, 105.44779289321906],
     Rating: 3.8,
     LimitCapacity: 1196,
+    "Giá sấy lúa": 150000,
+    "Giá sấy và bảo quản lúa": 360000,
   },
   {
     STT: 2,
@@ -16,6 +18,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.35836428631044, 105.65841131617583],
     Rating: 3.7,
     LimitCapacity: 916,
+    "Giá sấy lúa": 160000,
+    "Giá sấy và bảo quản lúa": 380000,
   },
   {
     STT: 3,
@@ -25,6 +29,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.332491684249048, 105.63654236252094],
     Rating: 5,
     LimitCapacity: 522,
+    "Giá sấy lúa": 165000,
+    "Giá sấy và bảo quản lúa": 400000,
   },
   {
     STT: 4,
@@ -35,6 +41,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.335070968714964, 105.67896263841826],
     Rating: 4.8,
     LimitCapacity: 635,
+    "Giá sấy lúa": 170000,
+    "Giá sấy và bảo quản lúa": 410000,
   },
   {
     STT: 5,
@@ -44,6 +52,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.168888003822527, 105.65780526246947],
     Rating: 4.9,
     LimitCapacity: 1624,
+    "Giá sấy lúa": 175000,
+    "Giá sấy và bảo quản lúa": 420000,
   },
   {
     STT: 6,
@@ -54,6 +64,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.240438869378682, 105.72923745089568],
     Rating: 4.8,
     LimitCapacity: 725,
+    "Giá sấy lúa": 180000,
+    "Giá sấy và bảo quản lúa": 430000,
   },
   {
     STT: 7,
@@ -64,6 +76,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.442982437166766, 105.16736965235478],
     Rating: 4.6,
     LimitCapacity: 660,
+    "Giá sấy lúa": 185000,
+    "Giá sấy và bảo quản lúa": 440000,
   },
   {
     STT: 8,
@@ -73,6 +87,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.274713854357742, 105.79973659005721],
     Rating: 3.8,
     LimitCapacity: 1940,
+    "Giá sấy lúa": 190000,
+    "Giá sấy và bảo quản lúa": 450000,
   },
   {
     STT: 9,
@@ -82,6 +98,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.227879979376064, 105.79947305270268],
     Rating: 4.2,
     LimitCapacity: 1354,
+    "Giá sấy lúa": 195000,
+    "Giá sấy và bảo quản lúa": 460000,
   },
   {
     STT: 10,
@@ -92,6 +110,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.256659441346992, 105.81613732015167],
     Rating: 4.4,
     LimitCapacity: 1876,
+    "Giá sấy lúa": 200000,
+    "Giá sấy và bảo quản lúa": 470000,
   },
   {
     STT: 11,
@@ -101,6 +121,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.417363911867602, 106.67372702014461],
     Rating: 4.4,
     LimitCapacity: 884,
+    "Giá sấy lúa": 205000,
+    "Giá sấy và bảo quản lúa": 480000,
   },
   {
     STT: 12,
@@ -110,6 +132,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.360275857631544, 106.01636513449],
     Rating: 3.8,
     LimitCapacity: 1871,
+    "Giá sấy lúa": 210000,
+    "Giá sấy và bảo quản lúa": 490000,
   },
   {
     STT: 13,
@@ -119,6 +143,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.510521548616328, 105.9950735656148],
     Rating: 3.7,
     LimitCapacity: 1060,
+    "Giá sấy lúa": 215000,
+    "Giá sấy và bảo quản lúa": 500000,
   },
   {
     STT: 14,
@@ -128,6 +154,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.42043300994279, 105.93924104898723],
     Rating: 4,
     LimitCapacity: 1159,
+    "Giá sấy lúa": 220000,
+    "Giá sấy và bảo quản lúa": 510000,
   },
   {
     STT: 15,
@@ -137,6 +165,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.367686759863254, 106.02054541340429],
     Rating: 4.4,
     LimitCapacity: 787,
+    "Giá sấy lúa": 225000,
+    "Giá sấy và bảo quản lúa": 520000,
   },
   {
     STT: 16,
@@ -146,6 +176,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.354700264014742, 105.95122571525089],
     Rating: 3.9,
     LimitCapacity: 1032,
+    "Giá sấy lúa": 230000,
+    "Giá sấy và bảo quản lúa": 530000,
   },
   {
     STT: 17,
@@ -156,6 +188,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.501668762334951, 106.34596712014364],
     Rating: 4.1,
     LimitCapacity: 1244,
+    "Giá sấy lúa": 235000,
+    "Giá sấy và bảo quản lúa": 540000,
   },
   {
     STT: 18,
@@ -165,6 +199,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.487752524974201, 106.12708076132189],
     Rating: 4.5,
     LimitCapacity: 1204,
+    "Giá sấy lúa": 240000,
+    "Giá sấy và bảo quản lúa": 550000,
   },
   {
     STT: 19,
@@ -174,6 +210,8 @@ const shops: ShopData[] = [
     "Tọa độ": [10.474614076230768, 106.10490460849465],
     Rating: 3.7,
     LimitCapacity: 1872,
+    "Giá sấy lúa": 245000,
+    "Giá sấy và bảo quản lúa": 560000,
   },
   {
     STT: 20,
@@ -184,9 +222,10 @@ const shops: ShopData[] = [
     "Tọa độ": [10.4536720030313, 106.37761487105195],
     Rating: 4.8,
     LimitCapacity: 1670,
+    "Giá sấy lúa": 250000,
+    "Giá sấy và bảo quản lúa": 580000,
   },
 ];
-
 export interface ShopData {
   STT: number;
   "Tên lò sấy": string;
@@ -196,6 +235,8 @@ export interface ShopData {
   Rating: number;
   LimitCapacity: number;
   Random?: number;
+  "Giá sấy lúa": number;
+  "Giá sấy và bảo quản lúa": number;
 }
 
 export default shops;
